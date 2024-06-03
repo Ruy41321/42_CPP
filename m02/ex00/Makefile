@@ -1,9 +1,9 @@
 CC = c++
-NAME = myProgram
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g
 RM = rm -rf
+NAME = a
 
-SRCS = main.cpp Harl.cpp
+SRCS = main.cpp Fixed.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 all: $(NAME)
@@ -12,7 +12,7 @@ $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
 %.o: %.cpp
-	${CC} ${CFLAGS} -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	$(RM) $(OBJS)
