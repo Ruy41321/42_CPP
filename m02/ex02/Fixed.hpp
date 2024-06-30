@@ -58,6 +58,6 @@ public:
     float toFloat( void ) const;
 };
 
-std::ostream &operator<<(std::ostream &out, const Fixed &fxd);
+std::ostream &operator<<(std::ostream &stream, const Fixed &bureaucrat);
 
 #endif
