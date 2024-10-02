@@ -15,8 +15,10 @@ Dog::Dog(Dog &dog): Animal(dog)
 
 Dog &Dog::operator=(Dog &dog)
 {
+    std::cout << "Dog assignation operator called" << std::endl;
     this->type = dog.getType();
-    this->brain = dog.getBrain();
+	this->brain = new Brain();
+    *this->brain = *dog.getBrain();
     return *this;
 }
 

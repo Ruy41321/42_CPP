@@ -26,6 +26,21 @@ for (int i = 0; i < 20; i++)
 
 std::cout << "---------------------" << std::endl;
 
+Dog basic;
+basic.getBrain()->setIdea(0, "I am a dog");
+
+{
+
+Dog tmp = basic;
+std::cout << tmp.getBrain()->getIdea(0) << std::endl;
+
+}
+std::cout << basic.getBrain()->getIdea(0) << std::endl;
+
+basic.makeSound();
+
+std::cout << "---------------------" << std::endl;
+
 
 return 0;
 }

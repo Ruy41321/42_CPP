@@ -16,7 +16,8 @@ Cat::Cat(Cat &cat): Animal(cat)
 Cat &Cat::operator=(Cat &cat)
 {
     this->type = cat.getType();
-    this->brain = cat.getBrain();
+	this->brain = new Brain();
+    *this->brain = *cat.getBrain();
     return *this;
 }
 
