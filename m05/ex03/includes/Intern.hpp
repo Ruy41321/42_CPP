@@ -4,6 +4,10 @@
 # include <string>
 # include "AForm.hpp"
 
+# define SHRUBBERY "shrubbery creation"
+# define ROBOTOMY "robotomy request"
+# define PRESIDENTIAL "presidential pardon"
+
 class Intern {
 	public:
 		Intern();

@@ -46,7 +46,7 @@ typedef AForm *(*Form_factory)(const std::string);
 
 AForm *Intern::makeForm(std::string name, std::string target)
 {
-	const std::string form_names[3] = {"shrubbery creation", "presidential pardon", "robotomy request"};
+	const std::string form_names[3] = {SHRUBBERY, PRESIDENTIAL, ROBOTOMY};
 	Form_factory form_factory[3] = {&createShrubberyCreation, &createPresidentialPardon, &createRobotomyRequest};
 	for (int i = 0; i < 3; i++)
 	{

@@ -37,7 +37,7 @@ AForm &AForm::operator=(AForm &to_copy)
 
 AForm::~AForm()
 {
-    std::cout << "Destructor of " << this << " called" << std::endl;
+    std::cout << "Destructor of AForm: " << this << " called" << std::endl;
 }
 
 std::string AForm::get_name() const
