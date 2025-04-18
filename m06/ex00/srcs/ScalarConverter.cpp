@@ -7,214 +7,163 @@
 using std::cout;
 using std::endl;
 
-/* UTILS */
-
-static int ft_stoi(const std::string& str)
+int is_pseudo_literal(std::string str)
 {
-    int num;
-    std::stringstream ss(str);
-
-    ss >> num;
-    return num;
+	if (str == "-inff" || str == "+inff" || str == "nanf")
+		return 1;
+	if (str == "-inf" || str == "+inf" || str == "nan")
+		return 1;
+	return 0;
 }
 
-static float ft_stof(const std::string& str)
+void invalid_case()
 {
-    float num;
-    std::stringstream ss(str);
-
-    ss >> num;
-    return num;
+	cout << "char: impossible" << endl;
+	cout << "int: impossible" << endl;
+	cout << "float: impossible" << endl;
+	cout << "double: impossible" << endl;
 }
 
-static double ft_stod(const std::string& str)
+int find_type(std::string str)
 {
-    double num;
-    std::stringstream ss(str);
-
-    ss >> num;
-    return num;
-}
-
-enum literal_type {
-    error,
-    _pseudo_literal,
-    _char,
-    _int,
-    _float,
-    _double,
-};
-
-static bool isChar(const std::string& literal)
-{
-    if (literal.length() != 1)
-        return false;
-    if (literal.at(0) < std::numeric_limits<char>::min()
-     || literal.at(0) > std::numeric_limits<char>::max()
-     || isdigit(literal.at(0)))
-            return false;
-    return true;
-}
-
-static bool isInt(const std::string& literal)
-{
-    for (size_t i = literal.at(0) == '-' ? 1 : 0; i < literal.length(); i += 1) {
-        if (!isdigit(literal.at(i)))
-            return false;
-    }
-    return true;
-}
-
-static bool isFloat(const std::string& literal)
-{
-    bool    found_point;
-
-    if (literal == "-inff" || literal == "+inff" || literal == "nanf")
-        return true;
-    if (literal.at(literal.length() - 1) != 'f')
-        return false;
-    found_point = false;
-    for (size_t i = 0; i < literal.length() - 1; i += 1)
+    if (str.length() == 1 && !isdigit(str[0]))
+        return CHAR;
+    if (str == "-inff" || str == "+inff" || str == "nanf")
+        return FLOAT;
+    if (str == "-inf" || str == "+inf" || str == "nan")
+        return DOUBLE;
+    if (str.find('.') != std::string::npos)
     {
-        if (literal.at(i) == '.' && found_point)
-            return false;
-        else if (literal.at(i) == '.')
-        {
-            found_point = true;
-            continue;
-        }
-        if (!isdigit(literal.at(i)))
-            return false;
+        if (str[str.length() - 1] == 'f')
+            return FLOAT;
+        else
+            return DOUBLE;
     }
-    return true;
-}
-
-static bool isDouble(const std::string& literal)
-{
-    bool    found_point;
-
-    found_point = false;
-    if (literal == "-inf" || literal == "+inf" || literal == "nan")
-        return true;
-    for (size_t i = 0; i < literal.length(); i += 1)
+    for (size_t i = 0; i < str.length(); ++i)
     {
-        if (literal.at(i) == '.' && found_point)
-            return false;
-        else if (literal.at(i) == '.')
-        {
-            found_point = true;
-            continue ;
-        }
-        if (!isdigit(literal.at(i)))
-            return false;
+        char c = str[i];
+        if (!isdigit(c) && c != '-' && c != '+')
+            return INVALID;
     }
-    return true;
+    return INT;
 }
 
-static bool isPseudoLiteral(const std::string& literal) {
-    return (literal == "-inff" || literal == "+inff" || literal == "nanf"
-          || literal == "-inf" || literal == "+inf"  || literal == "nan");
-}
-
-static literal_type getType(const std::string& literal)
+void char_case(std::string str)
 {
-    if (isChar(literal))
-        return _char;
-    if (isInt(literal))
-        return _int;
-    if (isFloat(literal))
-       return _float;
-    if (isDouble(literal))
-       return _double;
-    return error;
-}
-
-static void literalChar(char ch)
-{
-    cout << "char: '" << ch << "'" << endl;
-    cout << "int: " << static_cast<int>(ch) << endl;
+	char ch = str[0];
+	cout << "char: '" << ch << "'" << endl;
+	cout << "int: " << static_cast<int>(ch) << endl;
     cout << "float: " << static_cast<float>(ch) << ".0f" << endl;
     cout << "double: " << static_cast<double>(ch) << ".0" << endl;
 }
 
-static void literalInt(int nbr)
+void int_case(std::string str)
 {
-    if (isprint(nbr))
-        cout << "char: '" << static_cast<char>(nbr)  << "'" << endl; 
-    else
-        cout << "char: Non displayable" << endl; 
-    cout << "int: " << nbr << endl;
-    cout << "float: " << static_cast<float>(nbr) << ".0f" << endl;
-    cout << "double: " << static_cast<double>(nbr) << ".0" << endl;
+	int n;
+	std::stringstream ss(str);
+	ss >> n;
+	if (n <= std::numeric_limits<int>::min() || n >= std::numeric_limits<int>::max())
+		return(invalid_case());
+	if (!isprint(n))
+		cout << "char: Non displayable" << endl;
+	else
+		cout << "char: '" << static_cast<char>(n) << "'" << endl;
+	cout << "int: " << n << endl;
+    cout << "float: " << static_cast<float>(n) << ".0f" << endl;
+    cout << "double: " << static_cast<double>(n) << ".0" << endl;
 }
 
-static void literalFloat(float nbr)
+void float_case(std::string str)
 {
-    if (isprint(nbr))
-        cout << "char: '" << static_cast<char>(nbr) << "'" << endl;
-    else
-        cout << "char: Non displayable" << endl;
-    cout << "int: " << static_cast<int>(nbr) << endl;
-    cout << "float: " << nbr << ".0f" << endl;
-    cout << "double: " << static_cast<double>(nbr) << ".0" << endl;
+	if (is_pseudo_literal(str))
+	{
+		cout << "char: impossible" << endl;
+		cout << "int: impossible" << endl;
+		cout << "float: " << str << endl;
+		cout << "double: " << str.substr(0, str.length() - 1) << endl;
+		return ;
+	}
+	float f;
+	std::stringstream ss(str);
+	ss >> f;
+	if (f <= -std::numeric_limits<float>::max() || f >= std::numeric_limits<float>::max())
+		return(invalid_case());
+	if (!isprint(f))
+		cout << "char: Non displayable" << endl;
+	else
+		cout << "char: '" << static_cast<char>(f) << "'" << endl;
+	if (f < std::numeric_limits<int>::min() || f > std::numeric_limits<int>::max())
+		cout << "int: impossible" << endl;
+	else
+	{
+		cout << "int: " << static_cast<int>(f) << endl;
+		if (f == static_cast<int>(f))
+		{
+			cout << "float: " << f << ".0f" << endl;
+			cout << "double: " << static_cast<double>(f) << ".0" << endl;
+		}
+		else
+		{
+			cout << "float: " << f << "f" << endl;
+			cout << "double: " << static_cast<double>(f) << endl;
+		}
+	}
 }
 
-static void literalDouble(double nbr)
+void double_case(std::string str)
 {
-    if (isprint(nbr))
-        cout << "char: '" << static_cast<char>(nbr)  << "'" << endl;
-    else
-        cout << "char: Non displayable" << endl;
-    cout << "int: " << static_cast<int>(nbr) << endl;
-    cout << "float: " << static_cast<float>(nbr) << ".0f" << endl;
-    cout << "double: " << nbr << ".0" << endl;
-}
-
-static void pseudoLiteral(literal_type dest_type, const std::string& pseudo_literal)
-{
-    cout << "char: impossible" << endl;
-    cout << "int: impossible" << endl; 
-    if (dest_type == _float)
-    {
-        cout << "float: " << pseudo_literal << endl;
-        cout << "double: " << pseudo_literal.substr(0, pseudo_literal.length() - 1) << endl;
-    }
-    else if (dest_type == _double)
-    {
-        cout << "float: " << pseudo_literal + "f" << endl;
-        cout << "double: " << pseudo_literal << endl;
-    }
+	if (is_pseudo_literal(str))
+	{
+		cout << "char: impossible" << endl;
+		cout << "int: impossible" << endl;
+        cout << "float: " << str + "f" << endl;
+		cout << "double: " << str << endl;
+		return ;
+	}
+	double d;
+	std::stringstream ss(str);
+	ss >> d;
+	if (d <= std::numeric_limits<double>::min() || d >= std::numeric_limits<double>::max())
+		return(invalid_case());
+	if (!isprint(d))
+		cout << "char: Non displayable" << endl;
+	else
+	{
+		cout << "char: '" << static_cast<char>(d) << "'" << endl;
+		cout << "int: " << static_cast<int>(d) << endl;
+		cout << "float: " << static_cast<float>(d) << "f" << endl;
+		cout << "double: " << d << endl;
+	}
 }
 
 void ScalarConverter::convert(std::string str)
 {
-	char ch;
-	int n;
-	float f;
-	double d;
-
-    switch (getType(str))
+    switch (find_type(str))
     {
-        case _char:
-            ch = str.at(0);
+        case CHAR:
+		{
+            char_case(str);
             break;
-        case _int:
-            n = ft_stoi(str);
+		}
+        case INT:
+        {
+            int_case(str);
             break;
-        case _float:
-            if (isPseudoLiteral(str))
-                pseudoLiteral(_float, str);
-            else
-                f = ft_stof(str);
+        }
+        case FLOAT:
+        {
+            float_case(str);
             break;
-        case _double:
-            if (isPseudoLiteral(str))
-                pseudoLiteral(_double, str);
-            else
-                d = ft_stod(str);
+        }
+        case DOUBLE:
+        {
+            double_case(str);
             break;
+        }
         default:
-            cout << "Invalid Type" << endl;
+		{
+            invalid_case();
             break;
+		}
     }
 }

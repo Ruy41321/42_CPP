@@ -4,7 +4,7 @@ NAME = convert
 RM = rm -f
 INCLUDE = -I./includes
 
-SRCS = main.cpp srcs/ScalarConvert.cpp
+SRCS = main.cpp srcs/ScalarConverter.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 all: $(NAME)
