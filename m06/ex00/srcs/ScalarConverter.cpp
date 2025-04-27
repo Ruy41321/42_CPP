@@ -136,6 +136,10 @@ void double_case(std::string str)
 	}
 }
 
+ScalarConverter::ScalarConverter()
+{
+}
+
 void ScalarConverter::convert(std::string str)
 {
     switch (find_type(str))
