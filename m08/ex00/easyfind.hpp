@@ -3,9 +3,8 @@
 
 #include <algorithm>
 #include <exception>
-#include <iostream>
 
-class ValueNotFoundExcpetion : public std::exception {
+class ValueNotFoundException : public std::exception {
 	public:
 		const char* what() const throw() {
 			return "EasyFindException: value not found";
@@ -13,15 +12,12 @@ class ValueNotFoundExcpetion : public std::exception {
 	};
 
 template <typename T>
-bool easyfind(T& container, int param)
+typename T::iterator easyfind(T& container, int param)
 {
-	if (std::find(container.begin(), container.end(), param) == container.end())
-	{
-		throw ValueNotFoundExcpetion();
-		return false;
-	}
-	else
-		return true;
+	typename T::iterator it = std::find(container.begin(), container.end(), param);
+	if (it == container.end())
+		throw ValueNotFoundException();
+	return it;
 }
 
 #endif

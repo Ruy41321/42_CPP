@@ -15,7 +15,7 @@ int main(void)
 	try{ 
 		found = easyfind(v, val_to_find);
 	}
-	catch (const ValueNotFoundExcpetion& e)
+	catch (const ValueNotFoundException& e)
 	{
 		found = false;
 	}
