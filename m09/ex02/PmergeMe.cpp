@@ -1,4 +1,4 @@
-#include <PmergeMe.hpp>
+#include "PmergeMe.hpp"
 
 PmergeMe::PmergeMe() {}
 
@@ -65,7 +65,7 @@ void pairAndSplit(const std::vector<int>& X, std::vector<int>& A, std::vector<in
     }
 }
 
-// Restituisce un inssieme contentente il numero di elementi da inserire nella insieme finale divisi in gruppi
+// Restituisce un insieme contentente il numero di elementi da inserire nella insieme finale divisi in gruppi
 // se abbiamo 5 elementi restituira (2, 3) cio indica che il primo gruppo avra 2 elementi e il secondo 3
 std::vector<int> computeGroupSizes(int k)
 {

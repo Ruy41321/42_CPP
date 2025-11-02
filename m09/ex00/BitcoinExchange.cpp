@@ -1,5 +1,4 @@
-#include <BitcoinExchange.hpp>
-
+#include "BitcoinExchange.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -63,6 +62,34 @@ int isDateInvalid(const std::string &date) {
 			return 1;
 		}
 	}
+	// Estrai anno, mese e giorno
+	int year = std::atoi(date.substr(0, 4).c_str());
+	int month = std::atoi(date.substr(5, 2).c_str());
+	int day = std::atoi(date.substr(8, 2).c_str());
+	
+	// Valida mese
+	if (month < 1 || month > 12) {
+		return 1;
+	}
+	
+	// Valida giorno
+	if (day < 1 || day > 31) {
+		return 1;
+	}
+	
+	// Valida giorni per mese specifico
+	if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30) {
+		return 1;
+	}
+	
+	// Valida febbraio
+	if (month == 2) {
+		bool isLeap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+		if (day > (isLeap ? 29 : 28)) {
+			return 1;
+		}
+	}
+	
 	return 0; 
 }
 
@@ -99,22 +126,36 @@ void BitcoinExchange::printValues(const std::string &filename) {
             try {
                 double value = std::strtod(valueStr.c_str(), NULL);
                 if (value < 0) {
-                    std::cerr << "Error: Not a positive number." << std::endl;
+                    std::cerr << "Error: not a positive number." << std::endl;
                     continue;
                 }
                 if (value > 1000) {
-                    std::cerr << "Error: Too large a number." << std::endl;
+                    std::cerr << "Error: too large a number." << std::endl;
                     continue;
                 }
 				if (isDateInvalid(date)) {
-					std::cerr << "Error: Invalid date format." << std::endl;
+					std::cerr << "Error: bad input => " << date << std::endl;
 					continue;
 				}
+                // Trova la data più vicina (minore o uguale)
                 std::map<std::string, double>::iterator it = data.lower_bound(date);
-                if (it == data.end()) {
-                    std::cerr << "Error: Date not found in database." << std::endl;
-                    continue;
+                
+                // Se la data esatta non esiste, torna indietro alla precedente
+                if (it != data.end() && it->first != date) {
+                    if (it == data.begin()) {
+                        std::cerr << "Error: date too early." << std::endl;
+                        continue;
+                    }
+                    --it;
+                } else if (it == data.end()) {
+                    // Usa l'ultima data disponibile
+                    if (data.empty()) {
+                        std::cerr << "Error: no data available." << std::endl;
+                        continue;
+                    }
+                    --it;
                 }
+                
                 double rate = it->second;
                 std::cout << date << " => " << value << " = " << value * rate << std::endl;
             } catch (...) {

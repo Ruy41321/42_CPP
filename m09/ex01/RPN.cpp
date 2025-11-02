@@ -1,10 +1,6 @@
-#include <RPN.hpp>
-
+#include "RPN.hpp"
 #include <sstream>
-#include <stack>
-#include <string>
-#include <cstdlib>
-#include <iostream>
+#include <stdexcept>
 
 RPN::RPN() {}
 
@@ -25,9 +21,14 @@ long long RPN::calculate(const std::string& expression) {
 	std::string token;
 
 	while (iss >> token) {
-		if (isdigit(token[0])) {
-			stack.push(std::strtol(token.c_str(), NULL, 10));
-		} else {
+		// Verifica se il token è un singolo digit (numero < 10)
+		if (token.length() == 1 && isdigit(token[0])) {
+			stack.push(token[0] - '0');
+		} 
+		// Verifica se il token è un operatore valido
+		else if (token.length() == 1 && 
+		         (token[0] == '+' || token[0] == '-' || 
+		          token[0] == '*' || token[0] == '/')) {
 			if (stack.size() < 2) {
 				throw std::invalid_argument("Not enough operands");
 			}
@@ -35,14 +36,27 @@ long long RPN::calculate(const std::string& expression) {
 			stack.pop();
 			int a = stack.top(); 
 			stack.pop();
+			
 			switch (token[0]) {
 				case '+': stack.push(a + b); break;
 				case '-': stack.push(a - b); break;
 				case '*': stack.push(a * b); break;
-				case '/': stack.push(a / b); break;
-				default: throw std::invalid_argument("Invalid operator");
+				case '/': 
+					if (b == 0) {
+						throw std::invalid_argument("Division by zero");
+					}
+					stack.push(a / b); 
+					break;
 			}
+		} 
+		else {
+			throw std::invalid_argument("Invalid token");
 		}
+	}
+
+	// Verifica che ci sia esattamente un elemento nello stack
+	if (stack.size() != 1) {
+		throw std::invalid_argument("Invalid expression");
 	}
 
 	return stack.top();
