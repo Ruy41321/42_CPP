@@ -21,7 +21,7 @@ int Span::longestSpan()
 		throw std::logic_error("Not enough numbers to find a span");
 	int min = *std::min_element(_vec.begin(), _vec.end());
 	int max = *std::max_element(_vec.begin(), _vec.end());
-	return abs(max - min);
+	return max - min;
 }
 
 int Span::shortestSpan()
@@ -30,32 +30,14 @@ int Span::shortestSpan()
 		throw std::logic_error("Not enough numbers to find a span");
 	std::vector<int> sortedVec = _vec;
 	std::sort(sortedVec.begin(), sortedVec.end());
-	int temp = -1;
-	std::vector<int>::iterator nextEl = sortedVec.begin() + 1;
-	for ( std::vector<int>::iterator el = sortedVec.begin(); el != sortedVec.end(); el++)
+	int minSpan = sortedVec[1] - sortedVec[0];
+	for (size_t i = 1; i < sortedVec.size() - 1; i++)
 	{
-		int diff = *nextEl - *el;
-		if (diff < temp || temp == -1)
-			temp = diff;
-		nextEl++;
-		if (*nextEl)
-			break;
+		int diff = sortedVec[i + 1] - sortedVec[i];
+		if (diff < minSpan)
+			minSpan = diff;
 	}
-	return temp;
-}
-
-void Span::addMultipleNumbers(int n)
-{
-	int randomNumber;
-
-	std::srand(std::time(0));
-	for (int i = 0; i < n; ++i)
-	{
-		randomNumber = std::rand() % 100;
-		if (_vec.size() >= _maxN)
-			throw std::out_of_range("Span is full");
-		_vec.push_back(randomNumber);
-	}
+	return minSpan;
 }
 
 Span::Span(const Span &src)
